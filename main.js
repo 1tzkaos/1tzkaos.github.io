@@ -37,8 +37,12 @@ const PROJECTS = [
     body: 'Screen-reading game automation split into three separately testable layers: perception, decision, actuation. The state machine refuses to start at import if any state is missing a handler or a timeout, and the learning module will not write training data it cannot justify.' },
   { code: 'SB-04', name: 'solbot', year: 'private', url: null,
     role: 'Author',
-    stack: 'TypeScript, Dexploit API',
-    body: 'A paper-trading simulator that runs several strategy configurations in parallel lanes off one shared market feed, each with its own portfolio, so parameter sets are compared against identical ticks. Built as a demanding consumer of the Dexploit API.' },
+    stack: 'Rust, XGBoost, Python, ClickHouse',
+    body: 'A pump.fun graduate selector built on a gradient-boosted classifier. A long-lived Python sidecar scores each mint from its live swap stream and returns a probability; Rust distils the same tree model so the hot path never waits on Python. Two feature sets run side by side in a zero-capital A/B, and scoring fails closed: any error means the mint is never managed. Around it sits a market-making engine with self-impact modelling, depth gates and realizable-drawdown stops.' },
+  { code: 'HL-05', name: 'hyperliquid-bot', year: 'private', url: null,
+    role: 'Author',
+    stack: 'Rust, Hyperliquid',
+    body: 'A mean-reversion strategy for Hyperliquid perpetuals. Entries come from a trailing z-score of bar closes against the preceding window, floored so a near-constant window cannot manufacture a spurious extreme, plus a move-speed term on the premise that fast spikes do not revert and slow grinds do. A forward-test analyser reads the trade journal back and scores realization ratio with bias detection.' },
 ]
 
 function renderDetail(p) {
@@ -103,7 +107,7 @@ function renderSwap(d) {
   const sol = Number(d.sol)
   el.innerHTML =
     `<span class="sd ${side}">${side}</span>` +
-    `<span class="amt">${Number.isFinite(sol) ? sol.toFixed(3) : '—'} SOL</span>` +
+    `<span class="amt">${Number.isFinite(sol) ? sol.toFixed(3) : 'n/a'} SOL</span>` +
     `<span class="ven">${String(d.dex || '').replace(/_/g, ' ')}</span>`
   return el
 }
