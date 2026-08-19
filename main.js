@@ -1,5 +1,4 @@
 const STATS_URL = 'https://api.dexploit.dev/api/v1/stats'
-const PROTOCOLS_URL = 'https://api.dexploit.dev/api/v1/protocols'
 const STREAM_URL = 'https://dexploit.dev/api/demo-stream'   // keyless SSE firehose
 const TAPE_MAX = 9
 const POLL_MS = 20_000
@@ -114,37 +113,42 @@ function renderSwap(d) {
   return el
 }
 
-async function fallbackMarquee(reason) {
+/* Protocols indexed, tech used, projects shipped. Shown when the live stream is
+   unreachable; also the honest answer to "what does he actually work with". */
+const MARKS = [
+  ['solana.png', 'Solana'], ['raydium.svg', 'Raydium'], ['orca.png', 'Orca'],
+  ['pumpfun.png', 'Pump.fun'], ['meteora.png', 'Meteora'],
+  ['rust.svg', 'Rust'], ['clickhouse.svg', 'ClickHouse'], ['natsdotio.svg', 'NATS'],
+  ['typescript.svg', 'TypeScript'], ['python.svg', 'Python'],
+  ['prometheus.svg', 'Prometheus'], ['nextdotjs.svg', 'Next.js'],
+  ['dexploit.png', 'Dexploit'], ['pogobot.svg', 'PoGoBot'],
+]
+
+function fallbackMarquee() {
   const wrap = document.getElementById('tape-wrap')
   const track = document.getElementById('tape')
-  document.getElementById('tape-state').textContent = 'protocols'
+  document.getElementById('tape-state').textContent = 'built with'
   wrap.classList.remove('is-live')
-  try {
-    const res = await fetch(PROTOCOLS_URL)
-    const body = await res.json()
-    const names = (body?.data?.protocols ?? []).filter(Boolean)
-    if (!names.length) throw new Error('no protocols')
-    const once = names.map((n) => `<span class="swap"><span class="ven">${n.replace(/_/g, ' ')}</span></span>`).join('')
-    const group = `<div class="tape-group">${once}</div>`
-    track.className = 'tape-track fallback'
-    track.innerHTML = group + group   // two equal halves; the -50% keyframe is seamless
-  } catch {
-    wrap.style.display = 'none'
-  }
+  const once = MARKS
+    .map(([f, alt]) => `<span class="mk"><img src="assets/marks/${f}" alt="${alt}" title="${alt}" loading="lazy"></span>`)
+    .join('')
+  const group = `<div class="tape-group">${once}</div>`
+  track.className = 'tape-track fallback'
+  track.innerHTML = group + group   // two equal halves; the -50% keyframe is seamless
 }
 
 function startTape() {
   const wrap = document.getElementById('tape-wrap')
   const track = document.getElementById('tape')
   const state = document.getElementById('tape-state')
-  if (!('EventSource' in window)) return fallbackMarquee('unsupported')
+  if (!('EventSource' in window)) return fallbackMarquee()
 
   let opened = false
   let source
-  try { source = new EventSource(STREAM_URL) } catch { return fallbackMarquee('blocked') }
+  try { source = new EventSource(STREAM_URL) } catch { return fallbackMarquee() }
 
   // If nothing arrives shortly, assume the browser blocked it and degrade.
-  const giveUp = setTimeout(() => { if (!opened) { try { source.close() } catch {} ; fallbackMarquee('timeout') } }, 6000)
+  const giveUp = setTimeout(() => { if (!opened) { try { source.close() } catch {} ; fallbackMarquee() } }, 6000)
 
   source.addEventListener('open', () => { opened = true; clearTimeout(giveUp); state.textContent = 'live'; wrap.classList.add('is-live') })
   source.addEventListener('swap', (e) => {
@@ -158,7 +162,7 @@ function startTape() {
     while (track.children.length > TAPE_MAX) track.lastChild.remove()
   })
   source.addEventListener('error', () => {
-    if (!opened) { try { source.close() } catch {} ; clearTimeout(giveUp); fallbackMarquee('error') }
+    if (!opened) { try { source.close() } catch {} ; clearTimeout(giveUp); fallbackMarquee() }
   })
 }
 
