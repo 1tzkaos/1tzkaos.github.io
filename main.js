@@ -138,41 +138,64 @@ function fallbackMarquee() {
 
   const PX_PER_SEC = 46
 
-  // A marquee only looks endless if EACH half is at least as wide as the strip.
-  // Translating by one half then always leaves the other half covering the whole
-  // window; if a half is narrower, the trailing edge empties out before the loop
-  // restarts, which reads as the carousel stopping.
-  const layout = () => {
-    track.style.animation = 'none'
+  // Driven by rAF with modulo positioning rather than a CSS keyframe.
+  // A keyframe has a cycle, and anything that rebuilds the element restarts
+  // that cycle from zero, which reads as the strip snapping back. Here the
+  // offset is continuous and simply wraps, so there is no cycle to restart
+  // and no end to arrive at. Re-measuring only rescales the wrap point.
+  let offset = 0
+  let halfW = 0
+  let repeats = 0
+  let paused = false
+
+  const measure = () => {
+    const visible = wrap.clientWidth - (label ? label.offsetWidth : 0)
     track.innerHTML = `<div class="tape-group">${once}</div>`
     const runW = track.firstElementChild.getBoundingClientRect().width
-    const visible = wrap.clientWidth - (label ? label.offsetWidth : 0)
     if (!runW || !visible) return
 
-    const repeats = Math.max(1, Math.ceil(visible / runW))
-    const half = `<div class="tape-group">${once.repeat(repeats)}</div>`
-    track.innerHTML = half + half
-
-    const halfW = track.firstElementChild.getBoundingClientRect().width
-    track.style.setProperty('--shift', `${halfW}px`)
-    // Constant speed regardless of how many repeats the width demanded.
-    track.style.animation = `marquee ${(halfW / PX_PER_SEC).toFixed(2)}s linear infinite`
+    // Each half must cover the strip, or its trailing edge empties before wrap.
+    const need = Math.max(1, Math.ceil(visible / runW))
+    if (need !== repeats) {
+      repeats = need
+      const half = `<div class="tape-group">${once.repeat(repeats)}</div>`
+      track.innerHTML = half + half
+    } else {
+      const half = `<div class="tape-group">${once.repeat(repeats)}</div>`
+      track.innerHTML = half + half
+    }
+    halfW = track.firstElementChild.getBoundingClientRect().width
+    if (halfW > 0) offset %= halfW      // keep position across a re-measure
   }
 
-  layout()
+  let last = 0
+  const frame = (ts) => {
+    if (!last) last = ts
+    const dt = Math.min(0.05, (ts - last) / 1000)   // clamp after a tab switch
+    last = ts
+    if (!paused && halfW > 0) {
+      offset = (offset + PX_PER_SEC * dt) % halfW
+      track.style.transform = `translateX(${-offset}px)`
+    }
+    requestAnimationFrame(frame)
+  }
 
-  // Cells are fixed-width so the first measurement is already correct, but a
-  // font swap or a slow decode can still shift things: re-measure once every
-  // image has settled rather than trusting the first pass.
+  measure()
+  if (!reduceMotion) requestAnimationFrame(frame)
+
+  wrap.addEventListener('mouseenter', () => { paused = true })
+  wrap.addEventListener('mouseleave', () => { paused = false })
+
+  // Re-measure when assets settle or the window changes. Position is preserved,
+  // so none of these cause a visible jump.
   const imgs = [...track.querySelectorAll('img')]
   Promise.all(imgs.map((i) => i.complete ? null : new Promise((r) => {
     i.addEventListener('load', r, { once: true })
     i.addEventListener('error', r, { once: true })
-  }))).then(layout)
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout)
-
+  }))).then(measure)
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure)
   let t
-  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(layout, 180) })
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(measure, 180) })
 }
 
 function startTape() {

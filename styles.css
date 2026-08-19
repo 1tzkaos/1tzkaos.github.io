@@ -145,7 +145,7 @@ h1 .l2 {
 .tape-track.fallback {
   gap:0; flex:0 0 auto; width:max-content; overflow:visible;
   mask-image:none; -webkit-mask-image:none;
-  /* distance and duration are set in JS from the measured half width */
+  will-change:transform;   /* transform is driven per-frame from JS */
 }
 .mk { display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; width:76px; }
 .mk img {
@@ -156,8 +156,6 @@ h1 .l2 {
 .tape:hover .mk img { filter:grayscale(0) opacity(1); }
 
 .tape-group { display:flex; align-items:center; gap:26px; padding-right:26px; flex:0 0 auto; }
-.tape:hover .tape-track.fallback { animation-play-state:paused; }
-@keyframes marquee { from { transform:translateX(0) } to { transform:translateX(calc(-1 * var(--shift, 50%))) } }
 
 /* ---------- section labels ---------- */
 .section-label {
