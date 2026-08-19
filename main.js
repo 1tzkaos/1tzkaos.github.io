@@ -127,14 +127,52 @@ const MARKS = [
 function fallbackMarquee() {
   const wrap = document.getElementById('tape-wrap')
   const track = document.getElementById('tape')
+  const label = wrap.querySelector('.tape-label')
   document.getElementById('tape-state').textContent = 'built with'
   wrap.classList.remove('is-live')
-  const once = MARKS
-    .map(([f, alt]) => `<span class="mk"><img src="assets/marks/${f}" alt="${alt}" title="${alt}" loading="lazy"></span>`)
-    .join('')
-  const group = `<div class="tape-group">${once}</div>`
   track.className = 'tape-track fallback'
-  track.innerHTML = group + group   // two equal halves; the -50% keyframe is seamless
+
+  const once = MARKS
+    .map(([f, alt]) => `<span class="mk"><img src="assets/marks/${f}" alt="${alt}" title="${alt}"></span>`)
+    .join('')
+
+  const PX_PER_SEC = 46
+
+  // A marquee only looks endless if EACH half is at least as wide as the strip.
+  // Translating by one half then always leaves the other half covering the whole
+  // window; if a half is narrower, the trailing edge empties out before the loop
+  // restarts, which reads as the carousel stopping.
+  const layout = () => {
+    track.style.animation = 'none'
+    track.innerHTML = `<div class="tape-group">${once}</div>`
+    const runW = track.firstElementChild.getBoundingClientRect().width
+    const visible = wrap.clientWidth - (label ? label.offsetWidth : 0)
+    if (!runW || !visible) return
+
+    const repeats = Math.max(1, Math.ceil(visible / runW))
+    const half = `<div class="tape-group">${once.repeat(repeats)}</div>`
+    track.innerHTML = half + half
+
+    const halfW = track.firstElementChild.getBoundingClientRect().width
+    track.style.setProperty('--shift', `${halfW}px`)
+    // Constant speed regardless of how many repeats the width demanded.
+    track.style.animation = `marquee ${(halfW / PX_PER_SEC).toFixed(2)}s linear infinite`
+  }
+
+  layout()
+
+  // Cells are fixed-width so the first measurement is already correct, but a
+  // font swap or a slow decode can still shift things: re-measure once every
+  // image has settled rather than trusting the first pass.
+  const imgs = [...track.querySelectorAll('img')]
+  Promise.all(imgs.map((i) => i.complete ? null : new Promise((r) => {
+    i.addEventListener('load', r, { once: true })
+    i.addEventListener('error', r, { once: true })
+  }))).then(layout)
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout)
+
+  let t
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(layout, 180) })
 }
 
 function startTape() {

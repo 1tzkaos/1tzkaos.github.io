@@ -145,18 +145,19 @@ h1 .l2 {
 .tape-track.fallback {
   gap:0; flex:0 0 auto; width:max-content; overflow:visible;
   mask-image:none; -webkit-mask-image:none;
-  animation:marquee 48s linear infinite;
+  /* distance and duration are set in JS from the measured half width */
 }
-.mk { display:inline-flex; align-items:center; flex:0 0 auto; }
+.mk { display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; width:76px; }
 .mk img {
-  height:21px; width:auto; max-width:96px; display:block;
+  max-height:21px; max-width:76px; width:auto; height:auto; display:block;
+  object-fit:contain;
   filter:grayscale(1) opacity(.42); transition:filter .35s ease;
 }
 .tape:hover .mk img { filter:grayscale(0) opacity(1); }
 
 .tape-group { display:flex; align-items:center; gap:26px; padding-right:26px; flex:0 0 auto; }
 .tape:hover .tape-track.fallback { animation-play-state:paused; }
-@keyframes marquee { from { transform:translateX(0) } to { transform:translateX(-50%) } }
+@keyframes marquee { from { transform:translateX(0) } to { transform:translateX(calc(-1 * var(--shift, 50%))) } }
 
 /* ---------- section labels ---------- */
 .section-label {
