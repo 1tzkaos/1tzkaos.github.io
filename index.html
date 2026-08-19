@@ -8,30 +8,25 @@
 <meta property="og:title" content="Nick Stankiewicz">
 <meta property="og:description" content="Solana market-data infrastructure.">
 <meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 fill=%22%23050505%22/><circle cx=%2216%22 cy=%2216%22 r=%224%22 fill=%22%23fff%22/></svg>">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 fill=%22%23000%22/><circle cx=%2216%22 cy=%2216%22 r=%224%22 fill=%22%23fff%22/></svg>">
-<script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="webgl" aria-hidden="true">
-  <div data-us-project="N9XzvQXu7fA5SY2ewADJ" style="width:100%;height:100%"></div>
+
+<div class="stage" id="stage" aria-hidden="true">
+  <iframe src="https://my.spline.design/glowingplanetparticles-HmCVKutonlFn3Oqqe6DI9nWi/"
+          title="" tabindex="-1" loading="lazy" frameborder="0"></iframe>
 </div>
-<script type="text/javascript">
-!function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");
-i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.30/dist/unicornStudio.umd.js",
-i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},
-(document.head||document.body).appendChild(i)}}();
-</script>
 
 <header class="bar">
   <span class="bar-l">Houghton, MI</span>
   <span class="bar-c"><time id="clock" datetime="">--:--:--</time> UTC</span>
   <nav class="bar-r">
     <a href="#work">Work</a>
-    <a href="#stack">Stack</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
@@ -55,63 +50,33 @@ i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),wi
         <span class="v" data-k="pairs">&#8212;</span>
       </div>
       <div class="cell">
+        <span class="k">Token mints seen across all protocols</span>
+        <span class="v" data-k="mints">&#8212;</span>
+      </div>
+      <div class="cell">
         <span class="k">DEX protocols parsed on-chain</span>
         <span class="v" data-k="protocols">&#8212;</span>
       </div>
-      <div class="cell">
-        <span class="k">Timestamp of the most recent candle written</span>
-        <span class="v mono" data-k="latest">&#8212;</span>
-      </div>
     </div>
     <p class="foot-note">
-      Live from api.dexploit.dev. Last synced <span id="synced">never</span>, polling every 20 seconds.
+      <em>Snapshot from api.dexploit.dev, cached server-side. Last synced <span id="synced">never</span>.</em>
       <span id="readout-status"></span>
     </p>
   </section>
 
-  <section id="work" class="reveal">
-    <h2 class="section-label">Work</h2>
-    <div class="ledger">
-      <div class="ledger-head">
-        <span>Project</span><span>Stack</span><span>Detail</span>
-      </div>
-      <a class="ledger-row" href="https://dexploit.dev">
-        <span class="p">Dexploit</span>
-        <span class="s">Rust, ClickHouse, NATS</span>
-        <span class="d">Solana market-data API <i>2026</i></span>
-      </a>
-      <a class="ledger-row" href="https://github.com/DexploitV1/Dexploit-MCP">
-        <span class="p">Dexploit-MCP</span>
-        <span class="s">TypeScript, npm</span>
-        <span class="d">Claude Code, Desktop, Cursor <i>npm</i></span>
-      </a>
-      <a class="ledger-row" href="https://github.com/1tzkaos/PoGoBot">
-        <span class="p">PoGoBot</span>
-        <span class="s">Python, YOLOv8</span>
-        <span class="d">Screen-reading automation <i>2026</i></span>
-      </a>
-      <span class="ledger-row is-private">
-        <span class="p">solbot</span>
-        <span class="s">TypeScript</span>
-        <span class="d">Paper-trading simulator <i>private</i></span>
-      </span>
+  <div class="ticker" aria-label="Indexed protocols">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
+
+  <section id="work">
+    <h2 class="section-label">Work <span class="count" id="work-count"></span></h2>
+    <div class="explorer">
+      <ul class="proj-list" id="proj-list"></ul>
+      <div class="proj-detail" id="proj-detail"></div>
     </div>
   </section>
 
-  <section id="stack" class="reveal">
-    <h2 class="section-label">Stack</h2>
-    <ul class="chips">
-      <li>Rust</li><li>ClickHouse</li><li>NATS</li><li>gRPC</li>
-      <li>TypeScript</li><li>Next.js</li><li>Solana</li><li>Prometheus</li>
-    </ul>
-    <p class="note">
-      Rust services parse swaps out of on-chain program data and aggregate candles into ClickHouse.
-      NATS moves events between the protocol workers and the gateway. REST terminates behind Cloudflare;
-      WebSocket and gRPC run direct to the edge, which keeps proxy buffering out of the streaming path.
-    </p>
-  </section>
-
-  <section id="contact" class="reveal">
+  <section id="contact">
     <h2 class="section-label">Contact</h2>
     <ul class="links">
       <li><a href="mailto:nbstanki@mtu.edu">nbstanki@mtu.edu</a></li>
