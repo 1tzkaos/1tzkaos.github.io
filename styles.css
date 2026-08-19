@@ -142,6 +142,13 @@ h1 .l2 { display:block; color:var(--faint); }
 }
 .pd-anim { animation:pdIn .45s cubic-bezier(.2,.8,.2,1); }
 @keyframes pdIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+.pd-head { display:flex; align-items:center; gap:16px; margin-bottom:14px; }
+.pd-logo { width:44px; height:44px; border-radius:6px; flex:0 0 auto; display:block; }
+.pd-head .pd-title { margin:2px 0 0; }
+.pn { display:inline-flex; align-items:center; gap:16px; }
+.pl { width:30px; height:30px; border-radius:5px; flex:0 0 auto; opacity:.55; transition:opacity .3s; display:block; }
+.pl-none { width:30px; height:30px; border:1px solid var(--rule); border-radius:5px; }
+.proj:hover .pl, .proj[aria-selected="true"] .pl { opacity:1; }
 .pd-code { font-family:var(--mono); font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--faint); }
 .pd-title { font-family:var(--display); font-weight:600; font-size:clamp(24px,2.4vw,34px); margin:10px 0 14px; line-height:1.08; letter-spacing:-.028em; }
 .pd-body { margin:0 0 24px; color:var(--dim); font-size:14.5px; max-width:52ch; }

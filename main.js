@@ -21,14 +21,17 @@ function compact(n) {
 /* ---------- projects ---------- */
 const PROJECTS = [
   { code: 'DX-01', name: 'Dexploit', year: '2026', url: 'https://dexploit.dev',
+    logo: 'assets/logo-dexploit.png',
     role: 'Built and operate',
     stack: 'Rust, ClickHouse, NATS, gRPC',
     body: 'Pre-parsed OHLCV candles, swap events and price streams across every major Solana DEX, over REST, WebSocket, gRPC and GraphQL. Rust services parse swaps out of on-chain program data and aggregate candles into ClickHouse; NATS moves events between the protocol workers and the gateway.' },
   { code: 'DX-02', name: 'Dexploit-MCP', year: 'npm', url: 'https://github.com/DexploitV1/Dexploit-MCP',
+    logo: 'assets/logo-dexploit.png',
     role: 'Author',
     stack: 'TypeScript, Model Context Protocol',
     body: 'An MCP server that gives Claude Code, Claude Desktop and Cursor live access to the Dexploit API, so a model queries real Solana data instead of inventing it. Published to npm and installable with a single npx command.' },
   { code: 'PB-03', name: 'PoGoBot', year: '2026', url: 'https://github.com/1tzkaos/PoGoBot',
+    logo: 'assets/logo-pogobot.svg',
     role: 'Author',
     stack: 'Python, YOLOv8, OpenCV',
     body: 'Screen-reading game automation split into three separately testable layers: perception, decision, actuation. The state machine refuses to start at import if any state is missing a handler or a timeout, and the learning module will not write training data it cannot justify.' },
@@ -41,8 +44,13 @@ const PROJECTS = [
 function renderDetail(p) {
   const el = document.getElementById('proj-detail')
   el.innerHTML = `
-    <div class="pd-code">${p.code} &nbsp;/&nbsp; ${p.year}</div>
-    <h3 class="pd-title">${p.name}</h3>
+    <div class="pd-head">
+      ${p.logo ? `<img class="pd-logo" src="${p.logo}" alt="">` : ''}
+      <div>
+        <div class="pd-code">${p.code} &nbsp;/&nbsp; ${p.year}</div>
+        <h3 class="pd-title">${p.name}</h3>
+      </div>
+    </div>
     <p class="pd-body">${p.body}</p>
     <dl class="pd-meta">
       <dt>Role</dt><dd>${p.role}</dd>
@@ -66,7 +74,9 @@ function buildExplorer() {
     b.className = 'proj'
     b.type = 'button'
     b.setAttribute('aria-selected', i === 0 ? 'true' : 'false')
-    b.innerHTML = `<span>${p.name}</span><sup>${p.year}</sup>`
+    b.innerHTML =
+      `<span class="pn">${p.logo ? `<img class="pl" src="${p.logo}" alt="">` : '<i class="pl pl-none"></i>'}` +
+      `${p.name}</span><sup>${p.year}</sup>`
     const select = () => {
       if (b.getAttribute('aria-selected') === 'true') return
       list.querySelectorAll('.proj').forEach((o) => o.setAttribute('aria-selected', 'false'))
