@@ -8,17 +8,18 @@
 <meta property="og:title" content="Nick Stankiewicz">
 <meta property="og:description" content="Solana market-data infrastructure.">
 <meta property="og:type" content="website">
-<link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=Geist+Mono:wght@400&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 fill=%22%23000%22/><circle cx=%2216%22 cy=%2216%22 r=%224%22 fill=%22%23fff%22/></svg>">
+<script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="bar">
   <span class="bar-l">Houghton, MI</span>
-  <span class="bar-c"><span class="dot" aria-hidden="true"></span><time id="clock" datetime="">--:--:--</time> UTC</span>
+  <span class="bar-c"><time id="clock" datetime="">--:--:--</time> UTC</span>
   <nav class="bar-r">
     <a href="#work">Work</a>
     <a href="#stack">Stack</a>
@@ -28,85 +29,87 @@
 
 <main>
   <section class="hero">
-    <p class="eyebrow">Nick Stankiewicz <span class="sep">//</span> @1tzkaos</p>
-    <h1>Solana market&#8209;data<br><span class="accent">infrastructure</span></h1>
+    <div class="rays" aria-hidden="true"><img id="rays-img" alt="" src="assets/rays.svg"></div>
+    <p class="eyebrow">Nick Stankiewicz &nbsp;//&nbsp; @1tzkaos</p>
+    <h1 class="split">Solana market&#8209;data<span class="l2">infrastructure</span></h1>
     <p class="lede">
-      I build the layer underneath trading apps: ingest pipelines that parse swaps out of
-      on-chain program data, time-series storage holding close to a billion candles, and the
-      APIs that serve it, so nobody downstream has to build a pipeline of their own.
+      I build the layer underneath trading apps: ingest pipelines that parse swaps out of on-chain
+      program data, time-series storage holding close to a billion candles, and the APIs that serve it.
     </p>
 
     <div class="readout" id="readout" aria-live="polite">
-      <div class="cell"><span class="k">Candles stored</span><span class="v" data-k="candles">&mdash;</span></div>
-      <div class="cell"><span class="k">Trading pairs</span><span class="v" data-k="pairs">&mdash;</span></div>
-      <div class="cell"><span class="k">DEX protocols</span><span class="v" data-k="protocols">&mdash;</span></div>
-      <div class="cell"><span class="k">Latest candle</span><span class="v mono" data-k="latest">&mdash;</span></div>
+      <div class="cell">
+        <span class="k">Candles held in ClickHouse across every indexed pair</span>
+        <span class="v" data-k="candles">&#8212;</span>
+      </div>
+      <div class="cell">
+        <span class="k">Distinct trading pairs currently indexed</span>
+        <span class="v" data-k="pairs">&#8212;</span>
+      </div>
+      <div class="cell">
+        <span class="k">DEX protocols parsed on-chain</span>
+        <span class="v" data-k="protocols">&#8212;</span>
+      </div>
+      <div class="cell">
+        <span class="k">Timestamp of the most recent candle written</span>
+        <span class="v mono" data-k="latest">&#8212;</span>
+      </div>
     </div>
-    <p class="readout-note">
-      <span class="live"><span class="dot" aria-hidden="true"></span>Live</span>
-      from <a href="https://api.dexploit.dev">api.dexploit.dev</a>, polled every 20s.
+    <p class="foot-note">
+      Live data from api.dexploit.dev, polled every 20 seconds.
       <span id="readout-status"></span>
     </p>
   </section>
 
-  <section id="work" class="work">
+  <section id="work" class="reveal">
     <h2 class="section-label">Work</h2>
     <ol class="index">
-      <li>
-        <a href="https://dexploit.dev">
-          <span class="title">Dexploit<sup>2026</sup></span>
-          <span class="meta">Solana market-data API <span class="sep">·</span> Rust, ClickHouse, NATS</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/DexploitV1/Dexploit-MCP">
-          <span class="title">Dexploit&#8209;MCP<sup>npm</sup></span>
-          <span class="meta">MCP server for Claude Code, Claude Desktop, Cursor</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/1tzkaos/PoGoBot">
-          <span class="title">PoGoBot<sup>2026</sup></span>
-          <span class="meta">Screen-reading automation <span class="sep">·</span> Python, computer vision</span>
-        </a>
-      </li>
-      <li class="is-private">
-        <span class="row">
-          <span class="title">solbot<sup>private</sup></span>
-          <span class="meta">Paper-trading simulator on the Dexploit feed</span>
-        </span>
-      </li>
+      <li><a href="https://dexploit.dev">
+        <span class="title">Dexploit<sup>2026</sup></span>
+        <span class="meta">Solana market-data API &nbsp;·&nbsp; Rust, ClickHouse, NATS</span>
+      </a></li>
+      <li><a href="https://github.com/DexploitV1/Dexploit-MCP">
+        <span class="title">Dexploit&#8209;MCP<sup>npm</sup></span>
+        <span class="meta">MCP server for Claude Code, Claude Desktop, Cursor</span>
+      </a></li>
+      <li><a href="https://github.com/1tzkaos/PoGoBot">
+        <span class="title">PoGoBot<sup>2026</sup></span>
+        <span class="meta">Screen-reading automation &nbsp;·&nbsp; Python, computer vision</span>
+      </a></li>
+      <li class="is-private"><span class="row">
+        <span class="title">solbot<sup>private</sup></span>
+        <span class="meta">Paper-trading simulator on the Dexploit feed</span>
+      </span></li>
     </ol>
   </section>
 
-  <section id="stack" class="stack">
+  <section id="stack" class="reveal">
     <h2 class="section-label">Stack</h2>
     <ul class="chips">
       <li>Rust</li><li>ClickHouse</li><li>NATS</li><li>gRPC</li>
       <li>TypeScript</li><li>Next.js</li><li>Solana</li><li>Prometheus</li>
     </ul>
     <p class="note">
-      Rust services parse swaps out of on-chain program data and aggregate candles into
-      ClickHouse. NATS moves events between the protocol workers and the gateway. REST
-      terminates behind Cloudflare; WebSocket and gRPC run direct to the edge, which keeps
-      proxy buffering out of the streaming path.
+      Rust services parse swaps out of on-chain program data and aggregate candles into ClickHouse.
+      NATS moves events between the protocol workers and the gateway. REST terminates behind Cloudflare;
+      WebSocket and gRPC run direct to the edge, which keeps proxy buffering out of the streaming path.
     </p>
   </section>
 
-  <section id="contact" class="contact">
+  <section id="contact" class="reveal">
     <h2 class="section-label">Contact</h2>
     <ul class="links">
-      <li><span class="br">[</span><a href="mailto:nbstanki@mtu.edu">nbstanki@mtu.edu</a><span class="br">]</span></li>
-      <li><span class="br">[</span><a href="https://www.linkedin.com/in/nbstanki/">LinkedIn</a><span class="br">]</span></li>
-      <li><span class="br">[</span><a href="https://github.com/1tzkaos">GitHub</a><span class="br">]</span></li>
-      <li><span class="br">[</span><a href="https://dexploit.dev">dexploit.dev</a><span class="br">]</span></li>
+      <li><a href="mailto:nbstanki@mtu.edu">nbstanki@mtu.edu</a></li>
+      <li><a href="https://www.linkedin.com/in/nbstanki/">LinkedIn</a></li>
+      <li><a href="https://github.com/1tzkaos">GitHub</a></li>
+      <li><a href="https://dexploit.dev">dexploit.dev</a></li>
     </ul>
   </section>
 </main>
 
 <footer class="foot">
   <span>&copy; <span id="year">2026</span> Nick Stankiewicz</span>
-  <span class="mono">built without a framework</span>
+  <span>Built without a framework</span>
 </footer>
 
 <script src="main.js"></script>

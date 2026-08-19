@@ -88,7 +88,29 @@ async function poll() {
   }
 }
 
+/* Reveal sections as they enter the viewport. */
+function startReveals() {
+  const targets = document.querySelectorAll('.reveal')
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    targets.forEach((el) => el.classList.add('in'))
+    return
+  }
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue
+      e.target.classList.add('in')
+      io.unobserve(e.target)
+    }
+  }, { rootMargin: '0px 0px -12% 0px' })
+  targets.forEach((el) => io.observe(el))
+
+  // Safety net. A screenshot runner never scrolls, so the observer may never
+  // fire; without this the page would capture with its sections still hidden.
+  setTimeout(() => targets.forEach((el) => el.classList.add('in')), 2500)
+}
+
 document.getElementById('year').textContent = String(new Date().getUTCFullYear())
 startClock()
+startReveals()
 poll()
 setInterval(poll, POLL_MS)
