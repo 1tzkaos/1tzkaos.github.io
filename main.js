@@ -1,5 +1,7 @@
 const STATS_URL = 'https://api.dexploit.dev/api/v1/stats'
 const PROTOCOLS_URL = 'https://api.dexploit.dev/api/v1/protocols'
+const STREAM_URL = 'https://dexploit.dev/api/demo-stream'   // keyless SSE firehose
+const TAPE_MAX = 9
 const POLL_MS = 20_000
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const pad = (n) => String(n).padStart(2, '0')
@@ -81,18 +83,66 @@ function buildExplorer() {
   renderDetail(PROJECTS[0])
 }
 
-/* ---------- ticker ---------- */
-async function buildTicker() {
-  const track = document.getElementById('ticker')
-  let names = []
+/* ---------- live swap tape ---------- */
+/* Server-Sent Events, no credentials. Falls back to a static protocol marquee
+   if the stream cannot be reached (e.g. the route sends no CORS header). */
+function renderSwap(d) {
+  const el = document.createElement('span')
+  el.className = 'swap'
+  const side = (d.side || '').toLowerCase() === 'sell' ? 'sell' : 'buy'
+  const sol = Number(d.sol)
+  el.innerHTML =
+    `<span class="sd ${side}">${side}</span>` +
+    `<span class="amt">${Number.isFinite(sol) ? sol.toFixed(3) : '—'} SOL</span>` +
+    `<span class="ven">${String(d.dex || '').replace(/_/g, ' ')}</span>`
+  return el
+}
+
+async function fallbackMarquee(reason) {
+  const wrap = document.getElementById('tape-wrap')
+  const track = document.getElementById('tape')
+  document.getElementById('tape-state').textContent = 'protocols'
+  wrap.classList.remove('is-live')
   try {
     const res = await fetch(PROTOCOLS_URL)
     const body = await res.json()
-    names = (body?.data?.protocols ?? body?.protocols ?? []).filter(Boolean)
-  } catch { /* leave the strip empty rather than invent protocol names */ }
-  if (!names.length) { track.closest('.ticker').style.display = 'none'; return }
-  const once = names.map((n) => `<span>${n.replace(/_/g, ' ')}</span>`).join('')
-  track.innerHTML = once + once      // duplicated so the -50% loop is seamless
+    const names = (body?.data?.protocols ?? []).filter(Boolean)
+    if (!names.length) throw new Error('no protocols')
+    const once = names.map((n) => `<span class="swap"><span class="ven">${n.replace(/_/g, ' ')}</span></span>`).join('')
+    track.className = 'tape-track fallback'
+    track.innerHTML = once + once
+  } catch {
+    wrap.style.display = 'none'
+  }
+}
+
+function startTape() {
+  const wrap = document.getElementById('tape-wrap')
+  const track = document.getElementById('tape')
+  const state = document.getElementById('tape-state')
+  if (!('EventSource' in window)) return fallbackMarquee('unsupported')
+
+  let opened = false
+  let source
+  try { source = new EventSource(STREAM_URL) } catch { return fallbackMarquee('blocked') }
+
+  // If nothing arrives shortly, assume the browser blocked it and degrade.
+  const giveUp = setTimeout(() => { if (!opened) { try { source.close() } catch {} ; fallbackMarquee('timeout') } }, 6000)
+
+  source.addEventListener('open', () => { opened = true; clearTimeout(giveUp); state.textContent = 'live'; wrap.classList.add('is-live') })
+  source.addEventListener('swap', (e) => {
+    opened = true
+    clearTimeout(giveUp)
+    state.textContent = 'live'
+    wrap.classList.add('is-live')
+    let d
+    try { d = JSON.parse(e.data) } catch { return }
+    track.prepend(renderSwap(d))
+    while (track.children.length > TAPE_MAX) track.lastChild.remove()
+  })
+  source.addEventListener('error', () => {
+    if (!opened) { try { source.close() } catch {} ; clearTimeout(giveUp); fallbackMarquee('error') }
+  })
 }
 
 /* ---------- clock ---------- */
@@ -168,6 +218,6 @@ document.getElementById('year').textContent = String(new Date().getUTCFullYear()
 startClock()
 startStageFade()
 buildExplorer()
-buildTicker()
+startTape()
 poll()
 setInterval(poll, POLL_MS)

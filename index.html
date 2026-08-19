@@ -12,7 +12,7 @@
 <script>document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Geist:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -64,8 +64,9 @@
     </p>
   </section>
 
-  <div class="ticker" aria-label="Indexed protocols">
-    <div class="ticker-track" id="ticker"></div>
+  <div class="tape" id="tape-wrap" aria-label="Live Solana swaps">
+    <span class="tape-label"><i class="pip"></i><span id="tape-state">connecting</span></span>
+    <div class="tape-track" id="tape"></div>
   </div>
 
   <section id="work">
