@@ -125,8 +125,9 @@ async function fallbackMarquee(reason) {
     const names = (body?.data?.protocols ?? []).filter(Boolean)
     if (!names.length) throw new Error('no protocols')
     const once = names.map((n) => `<span class="swap"><span class="ven">${n.replace(/_/g, ' ')}</span></span>`).join('')
+    const group = `<div class="tape-group">${once}</div>`
     track.className = 'tape-track fallback'
-    track.innerHTML = once + once
+    track.innerHTML = group + group   // two equal halves; the -50% keyframe is seamless
   } catch {
     wrap.style.display = 'none'
   }

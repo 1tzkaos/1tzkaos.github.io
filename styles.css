@@ -111,8 +111,16 @@ h1 .l2 { display:block; color:var(--faint); }
 .swap .amt { color:var(--dim); font-variant-numeric:tabular-nums; }
 .swap .ven { color:var(--faint); }
 /* Static fallback marquee when the stream cannot be reached */
-.tape-track.fallback { animation:marquee 42s linear infinite; width:max-content; mask-image:none; -webkit-mask-image:none; }
-@keyframes marquee { to { transform:translateX(-50%) } }
+/* Two identical halves, each carrying its own trailing gap, so translating by
+   exactly -50% lands the second half where the first began: no seam, no drift. */
+.tape-track.fallback {
+  gap:0; flex:0 0 auto; width:max-content; overflow:visible;
+  mask-image:none; -webkit-mask-image:none;
+  animation:marquee 48s linear infinite;
+}
+.tape-group { display:flex; align-items:center; gap:26px; padding-right:26px; flex:0 0 auto; }
+.tape:hover .tape-track.fallback { animation-play-state:paused; }
+@keyframes marquee { from { transform:translateX(0) } to { transform:translateX(-50%) } }
 
 /* ---------- section labels ---------- */
 .section-label {
