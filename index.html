@@ -10,12 +10,21 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 fill=%22%23000%22/><circle cx=%2216%22 cy=%2216%22 r=%224%22 fill=%22%23fff%22/></svg>">
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="webgl" aria-hidden="true">
+  <div data-us-project="N9XzvQXu7fA5SY2ewADJ" style="width:100%;height:100%"></div>
+</div>
+<script type="text/javascript">
+!function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");
+i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.30/dist/unicornStudio.umd.js",
+i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},
+(document.head||document.body).appendChild(i)}}();
+</script>
 
 <header class="bar">
   <span class="bar-l">Houghton, MI</span>
@@ -29,7 +38,6 @@
 
 <main>
   <section class="hero">
-    <div class="rays" aria-hidden="true"><img id="rays-img" alt="" src="assets/rays.svg"></div>
     <p class="eyebrow">Nick Stankiewicz &nbsp;//&nbsp; @1tzkaos</p>
     <h1 class="split">Solana market&#8209;data<span class="l2">infrastructure</span></h1>
     <p class="lede">
@@ -56,31 +64,38 @@
       </div>
     </div>
     <p class="foot-note">
-      Live data from api.dexploit.dev, polled every 20 seconds.
+      Live from api.dexploit.dev. Last synced <span id="synced">never</span>, polling every 20 seconds.
       <span id="readout-status"></span>
     </p>
   </section>
 
   <section id="work" class="reveal">
     <h2 class="section-label">Work</h2>
-    <ol class="index">
-      <li><a href="https://dexploit.dev">
-        <span class="title">Dexploit<sup>2026</sup></span>
-        <span class="meta">Solana market-data API &nbsp;·&nbsp; Rust, ClickHouse, NATS</span>
-      </a></li>
-      <li><a href="https://github.com/DexploitV1/Dexploit-MCP">
-        <span class="title">Dexploit&#8209;MCP<sup>npm</sup></span>
-        <span class="meta">MCP server for Claude Code, Claude Desktop, Cursor</span>
-      </a></li>
-      <li><a href="https://github.com/1tzkaos/PoGoBot">
-        <span class="title">PoGoBot<sup>2026</sup></span>
-        <span class="meta">Screen-reading automation &nbsp;·&nbsp; Python, computer vision</span>
-      </a></li>
-      <li class="is-private"><span class="row">
-        <span class="title">solbot<sup>private</sup></span>
-        <span class="meta">Paper-trading simulator on the Dexploit feed</span>
-      </span></li>
-    </ol>
+    <div class="ledger">
+      <div class="ledger-head">
+        <span>Project</span><span>Stack</span><span>Detail</span>
+      </div>
+      <a class="ledger-row" href="https://dexploit.dev">
+        <span class="p">Dexploit</span>
+        <span class="s">Rust, ClickHouse, NATS</span>
+        <span class="d">Solana market-data API <i>2026</i></span>
+      </a>
+      <a class="ledger-row" href="https://github.com/DexploitV1/Dexploit-MCP">
+        <span class="p">Dexploit-MCP</span>
+        <span class="s">TypeScript, npm</span>
+        <span class="d">Claude Code, Desktop, Cursor <i>npm</i></span>
+      </a>
+      <a class="ledger-row" href="https://github.com/1tzkaos/PoGoBot">
+        <span class="p">PoGoBot</span>
+        <span class="s">Python, YOLOv8</span>
+        <span class="d">Screen-reading automation <i>2026</i></span>
+      </a>
+      <span class="ledger-row is-private">
+        <span class="p">solbot</span>
+        <span class="s">TypeScript</span>
+        <span class="d">Paper-trading simulator <i>private</i></span>
+      </span>
+    </div>
   </section>
 
   <section id="stack" class="reveal">

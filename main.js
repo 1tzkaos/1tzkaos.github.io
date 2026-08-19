@@ -80,6 +80,11 @@ async function poll() {
         setValue(latest, `${pad(t.getUTCHours())}:${pad(t.getUTCMinutes())}:${pad(t.getUTCSeconds())} UTC`)
       }
     }
+    const synced = document.getElementById('synced')
+    if (synced) {
+      const n = new Date()
+      synced.textContent = `${pad(n.getUTCHours())}:${pad(n.getUTCMinutes())}:${pad(n.getUTCSeconds())} UTC`
+    }
     status.textContent = ''
     first = false
   } catch (err) {

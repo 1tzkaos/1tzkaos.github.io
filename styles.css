@@ -1,12 +1,12 @@
 :root {
-  --bg:#000000;
+  --bg:#050505;
   --ink:#FFFFFF;
-  --dim:#8A8A8E;
-  --faint:#55555A;
+  --dim:#A1A1AA;
+  --faint:#888888;
   --line:#1C1C1E;
   --rule:#262629;
   --sans:'Geist', ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --mono:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif:'Instrument Serif', 'Times New Roman', Georgia, serif;
   --pad: clamp(20px, 5vw, 72px);
 }
@@ -154,4 +154,36 @@ h1 .l2 { display:block; color:var(--faint); }
     transition-duration:.001ms !important; }
   .reveal { opacity:1; transform:none; }
   .rays { opacity:.5; }
+}
+
+/* ---------- WebGL ambient layer ---------- */
+.webgl { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.85; }
+.webgl > div { width:100%; height:100%; }
+body { background-image:none; }
+.bar { z-index:20; }
+main, .foot { position:relative; z-index:2; }
+
+/* ---------- work ledger, after Nite Riot ---------- */
+.ledger { font-family:var(--mono); }
+.ledger-head, .ledger-row {
+  display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1.4fr);
+  gap:24px; align-items:baseline; padding:13px 4px;
+}
+.ledger-head {
+  font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--faint);
+  border-bottom:1px solid var(--rule); padding-bottom:14px;
+}
+.ledger-row {
+  border-bottom:1px solid var(--line); text-decoration:none; font-size:11.5px;
+  letter-spacing:.11em; text-transform:uppercase; color:var(--dim);
+  transition:background-color .25s ease, padding-left .3s cubic-bezier(.2,.8,.2,1);
+}
+a.ledger-row:hover { background:rgba(255,255,255,.045); padding-left:16px; }
+a.ledger-row:hover .p { color:var(--ink); }
+.ledger-row .p { color:var(--ink); font-weight:500; }
+.ledger-row .d i { font-style:normal; color:var(--faint); margin-left:10px; }
+.ledger-row.is-private, .ledger-row.is-private .p { color:var(--faint); }
+@media (max-width:760px) {
+  .ledger-head { display:none; }
+  .ledger-row { grid-template-columns:1fr; gap:5px; padding:16px 4px; }
 }
